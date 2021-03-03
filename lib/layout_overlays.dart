@@ -128,13 +128,13 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
   @override
   void didUpdateWidget(OverlayBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) => syncWidgetAndOverlay());
+    WidgetsBinding.instance.addPostFrameCallback((_) => syncWidgetAndOverlay(oldWidget));
   }
 
   @override
   void reassemble() {
     super.reassemble();
-    WidgetsBinding.instance.addPostFrameCallback((_) => syncWidgetAndOverlay());
+    WidgetsBinding.instance.addPostFrameCallback((_) => syncWidgetAndOverlay(null));
   }
 
   @override
@@ -176,7 +176,12 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
     }
   }
 
-  void syncWidgetAndOverlay() {
+  void syncWidgetAndOverlay(OverlayBuilder oldWidget) {
+    // hide and show overlay because otherwise overlay might be mispositioned
+    if (oldWidget != null && widget.showOverlay) {
+      hideOverlay();
+      showOverlay();
+    }
     if (isShowingOverlay() && !widget.showOverlay) {
       hideOverlay();
     } else if (!isShowingOverlay() && widget.showOverlay) {
