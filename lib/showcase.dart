@@ -224,8 +224,10 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
   void _getOnTooltipTap() {
     if (widget.disposeOnTap == true) {
       ShowCaseWidget.of(context).dismiss();
+      widget.onToolTipClick();
+    } else {
+      (widget.onToolTipClick ?? _nextIfAny)?.call();
     }
-    widget.onToolTipClick?.call();
   }
 
   buildOverlayOnTarget(
