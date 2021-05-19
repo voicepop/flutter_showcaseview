@@ -5,8 +5,8 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
@@ -14,40 +14,42 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:showcaseview/get_position.dart';
-import 'package:showcaseview/measure_size.dart';
+
+import 'get_position.dart';
+import 'measure_size.dart';
 
 class ToolTipWidget extends StatefulWidget {
-  final GetPosition position;
-  final Offset offset;
-  final Size screenSize;
-  final String title;
-  final String description;
-  final Animation<double> animationOffset;
-  final TextStyle titleTextStyle;
-  final TextStyle descTextStyle;
-  final Widget container;
-  final Color tooltipColor;
-  final Color textColor;
-  final bool showArrow;
-  final double contentHeight;
-  final double contentWidth;
-  static bool isArrowUp;
-  final VoidCallback onTooltipTap;
-  final EdgeInsets contentPadding;
+  final GetPosition? position;
+  final Offset? offset;
+  final Size? screenSize;
+  final String? title;
+  final String? description;
+  final Animation<double>? animationOffset;
+  final TextStyle? titleTextStyle;
+  final TextStyle? descTextStyle;
+  final Widget? container;
+  final Color? tooltipColor;
+  final Color? textColor;
+  final bool? showArrow;
+  final double? contentHeight;
+  final double? contentWidth;
+  static late bool isArrowUp;
+  final VoidCallback? onTooltipTap;
+  final EdgeInsets? contentPadding;
 
   ToolTipWidget(
       {this.position,
@@ -72,12 +74,12 @@ class ToolTipWidget extends StatefulWidget {
 }
 
 class _ToolTipWidgetState extends State<ToolTipWidget> {
-  Offset position;
+  Offset? position;
 
   bool isCloseToTopOrBottom(Offset position) {
-    double height = 120;
+    var height = 120.0;
     height = widget.contentHeight ?? height;
-    return (widget.screenSize.height - position.dy) <= height;
+    return (widget.screenSize!.height - position.dy) <= height;
   }
 
   String findPositionForContent(Offset position) {
@@ -89,64 +91,64 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
   }
 
   double _getTooltipWidth() {
-    double titleLength = widget.title == null ? 0 : widget.title.length * 10.0;
-    double descriptionLength = widget.description.length * 7.0;
+    final titleLength = widget.title == null ? 0 : widget.title!.length * 10.0;
+    final descriptionLength = widget.description!.length * 7.0;
     var maxTextWidth = max(titleLength, descriptionLength);
-    if (maxTextWidth > widget.screenSize.width - 20) {
-      return widget.screenSize.width - 20;
+    if (maxTextWidth > widget.screenSize!.width - 20) {
+      return widget.screenSize!.width - 20;
     } else {
       return maxTextWidth + 15;
     }
   }
 
   bool _isLeft() {
-    double screenWidth = widget.screenSize.width / 3;
-    return !(screenWidth <= widget.position.getCenter());
+    final screenWidth = widget.screenSize!.width / 3;
+    return !(screenWidth <= widget.position!.getCenter());
   }
 
   bool _isRight() {
-    double screenWidth = widget.screenSize.width / 3;
-    return ((screenWidth * 2) <= widget.position.getCenter());
+    final screenWidth = widget.screenSize!.width / 3;
+    return ((screenWidth * 2) <= widget.position!.getCenter());
   }
 
-  double _getLeft() {
+  double? _getLeft() {
     if (_isLeft()) {
-      double leftPadding =
-          widget.position.getCenter() - (_getTooltipWidth() * 0.1);
-      if (leftPadding + _getTooltipWidth() > widget.screenSize.width) {
-        leftPadding = (widget.screenSize.width - 20) - _getTooltipWidth();
+      var leftPadding =
+          widget.position!.getCenter() - (_getTooltipWidth() * 0.1);
+      if (leftPadding + _getTooltipWidth() > widget.screenSize!.width) {
+        leftPadding = (widget.screenSize!.width - 20) - _getTooltipWidth();
       }
       if (leftPadding < 20) {
         leftPadding = 14;
       }
       return leftPadding;
     } else if (!(_isRight())) {
-      return widget.position.getCenter() - (_getTooltipWidth() * 0.5);
+      return widget.position!.getCenter() - (_getTooltipWidth() * 0.5);
     } else {
       return null;
     }
   }
 
-  double _getRight() {
+  double? _getRight() {
     if (_isRight()) {
-      double rightPadding =
-          widget.position.getCenter() + (_getTooltipWidth() / 2);
-      if (rightPadding + _getTooltipWidth() > widget.screenSize.width) {
+      var rightPadding =
+          widget.position!.getCenter() + (_getTooltipWidth() / 2);
+      if (rightPadding + _getTooltipWidth() > widget.screenSize!.width) {
         rightPadding = 14;
       }
       return rightPadding;
     } else if (!(_isLeft())) {
-      return widget.position.getCenter() - (_getTooltipWidth() * 0.5);
+      return widget.position!.getCenter() - (_getTooltipWidth() * 0.5);
     } else {
       return null;
     }
   }
 
   double _getSpace() {
-    double space = widget.position.getCenter() - (widget.contentWidth / 2);
-    if (space + widget.contentWidth > widget.screenSize.width) {
-      space = widget.screenSize.width - widget.contentWidth - 8;
-    } else if (space < (widget.contentWidth / 2)) {
+    var space = widget.position!.getCenter() - (widget.contentWidth! / 2);
+    if (space + widget.contentWidth! > widget.screenSize!.width) {
+      space = widget.screenSize!.width - widget.contentWidth! - 8;
+    } else if (space < (widget.contentWidth! / 2)) {
       space = 16;
     }
     return space;
@@ -160,20 +162,21 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final contentOrientation = findPositionForContent(position);
+    final contentOrientation = findPositionForContent(position!);
     final contentOffsetMultiplier = contentOrientation == "BELOW" ? 1.0 : -1.0;
     ToolTipWidget.isArrowUp = contentOffsetMultiplier == 1.0;
 
     final contentY = ToolTipWidget.isArrowUp
-        ? widget.position.getBottom() + (contentOffsetMultiplier * 3)
-        : widget.position.getTop() + (contentOffsetMultiplier * 3);
+        ? widget.position!.getBottom() + (contentOffsetMultiplier * 3)
+        : widget.position!.getTop() + (contentOffsetMultiplier * 3);
 
-    final contentFractionalOffset = contentOffsetMultiplier.clamp(-1.0, 0.0);
+    final num contentFractionalOffset =
+        contentOffsetMultiplier.clamp(-1.0, 0.0);
 
-    double paddingTop = ToolTipWidget.isArrowUp ? 22 : 0;
-    double paddingBottom = ToolTipWidget.isArrowUp ? 0 : 27;
+    var paddingTop = ToolTipWidget.isArrowUp ? 22.0 : 0.0;
+    var paddingBottom = ToolTipWidget.isArrowUp ? 0.0 : 27.0;
 
-    if (!widget.showArrow) {
+    if (!widget.showArrow!) {
       paddingTop = 10;
       paddingBottom = 10;
     }
@@ -181,18 +184,18 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
     if (widget.container == null) {
       return Stack(
         children: <Widget>[
-          widget.showArrow ? _getArrow(contentOffsetMultiplier) : Container(),
+          widget.showArrow! ? _getArrow(contentOffsetMultiplier) : Container(),
           Positioned(
             top: contentY,
             left: _getLeft(),
             right: _getRight(),
             child: FractionalTranslation(
-              translation: Offset(0.0, contentFractionalOffset),
+              translation: Offset(0.0, contentFractionalOffset as double),
               child: SlideTransition(
                 position: Tween<Offset>(
                   begin: Offset(0.0, contentFractionalOffset / 10),
                   end: Offset(0.0, 0.100),
-                ).animate(widget.animationOffset),
+                ).animate(widget.animationOffset!),
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
@@ -217,22 +220,22 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                                   children: <Widget>[
                                     widget.title != null
                                         ? Text(
-                                            widget.title,
+                                            widget.title!,
                                             style: widget.titleTextStyle ??
                                                 Theme.of(context)
                                                     .textTheme
-                                                    .headline6
+                                                    .headline6!
                                                     .merge(TextStyle(
                                                         color:
                                                             widget.textColor)),
                                           )
                                         : Container(),
                                     Text(
-                                      widget.description,
+                                      widget.description!,
                                       style: widget.descTextStyle ??
                                           Theme.of(context)
                                               .textTheme
-                                              .subtitle2
+                                              .subtitle2!
                                               .merge(TextStyle(
                                                   color: widget.textColor)),
                                     ),
@@ -258,14 +261,14 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
             left: _getSpace(),
             top: contentY - 10,
             child: FractionalTranslation(
-              translation: Offset(0.0, contentFractionalOffset),
+              translation: Offset(0.0, contentFractionalOffset as double),
               child: SlideTransition(
                 position: Tween<Offset>(
                   begin: Offset(0.0, contentFractionalOffset / 10),
-                  end: !widget.showArrow && !ToolTipWidget.isArrowUp
+                  end: !widget.showArrow! && !ToolTipWidget.isArrowUp
                       ? Offset(0.0, 0.0)
                       : Offset(0.0, 0.100),
-                ).animate(widget.animationOffset),
+                ).animate(widget.animationOffset!),
                 child: Material(
                   color: Colors.transparent,
                   child: GestureDetector(
@@ -279,9 +282,9 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                         child: MeasureSize(
                             onSizeChange: (size) {
                               setState(() {
-                                Offset tempPos = position;
+                                var tempPos = position;
                                 tempPos = Offset(
-                                    position.dx, position.dy + size.height);
+                                    position!.dx, position!.dy + size!.height);
                                 position = tempPos;
                               });
                             },
@@ -298,20 +301,20 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
     }
   }
 
-  Widget _getArrow(contentOffsetMultiplier) {
+  Widget _getArrow(double contentOffsetMultiplier) {
     final contentFractionalOffset = contentOffsetMultiplier.clamp(-1.0, 0.0);
     return Positioned(
       top: ToolTipWidget.isArrowUp
-          ? widget.position.getBottom()
-          : widget.position.getTop() - 1,
-      left: widget.position.getCenter() - 24,
+          ? widget.position!.getBottom()
+          : widget.position!.getTop() - 1,
+      left: widget.position!.getCenter() - 24,
       child: FractionalTranslation(
         translation: Offset(0.0, contentFractionalOffset),
         child: SlideTransition(
           position: Tween<Offset>(
             begin: Offset(0.0, contentFractionalOffset / 5),
             end: Offset(0.0, 0.150),
-          ).animate(widget.animationOffset),
+          ).animate(widget.animationOffset!),
           child: Icon(
             ToolTipWidget.isArrowUp
                 ? Icons.arrow_drop_up
